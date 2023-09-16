@@ -1,8 +1,16 @@
 import requests
 import time
+import os
+import re
 from http.client import IncompleteRead
 from pytube import YouTube
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+
+
+def extract_youtube_id(youtube_url):
+    """regex to extract the YouTube video ID from a URL."""
+    match = re.search(r"v=([a-zA-Z0-9_-]{11})", youtube_url)
+    return match.group(1) if match else None
 
 def get_most_replayed_section(youtube_id):
     url = f"https://yt.lemnoslife.com/videos?part=mostReplayed&id={youtube_id}"
@@ -30,15 +38,17 @@ def get_most_replayed_section(youtube_id):
 
     return start_time_millis / 1000, end_time_millis / 1000  # Convert to seconds
 
-
-def download_video_section(youtube_id, start_time, end_time, output_filename="output_clip.mp4", max_retries=3):
+# Downloads the video into a temp file, extracts the highlighted time range, and deletes the temp video
+def download_video_section(youtube_url, start_time, end_time, output_filename, max_retries=3):
     retries = 0
     while retries < max_retries:
         try:
-            yt = YouTube(f"https://www.youtube.com/watch?v={youtube_id}")
+            yt = YouTube(f"{youtube_url}")
             stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
             download_path = stream.download(filename="temp_video")
             ffmpeg_extract_subclip(download_path, start_time, end_time, targetname=output_filename)
+            # removes temp file when done
+            os.remove("temp_video")
             return
         except IncompleteRead:
             retries += 1
@@ -48,9 +58,18 @@ def download_video_section(youtube_id, start_time, end_time, output_filename="ou
     print("Failed to download after multiple attempts.")
 
 def main():
-    youtube_id = "KdpeV2KBPBQ"  # Replace with your YouTube Video ID
-    start_time, end_time = get_most_replayed_section(youtube_id)
-    download_video_section(youtube_id, start_time, end_time)
+    # Reads user input for a YouTube URL
+    youtube_url = input("Enter the entire YouTube video URL: ")
+    youtube_id = extract_youtube_id(youtube_url)
+    if not youtube_id:
+        print("Invalid YouTube URL provided.")
+        return
+    #print(youtube_id)
+    # Reads user input for mp4 file output
+    output_filename = input("Enter the desired output filename (e.g. output_clip.mp4): ")
+    start_time, end_time = get_most_replayed_section(youtube_url)
+
+    download_video_section(youtube_id, start_time, end_time, output_filename)
 
 if __name__ == "__main__":
     main()
