@@ -1,0 +1,6 @@
+requests
+pocketsphinx
+pytube
+moviepy
+speech_recognition
+re
