@@ -158,7 +158,7 @@ root.minsize(width=250, height=400)
 label = tk.Label(root, text="YouTube Highlight Extractor v1", font=("Arial", 16))
 label.pack(pady=20)
 
-label = tk.Label(root, text="Warning: This applies only to videos that have 'most replayed' activated", font=("Arial", 12), fg="blue")
+label = tk.Label(root, text="Warning: This applies only to videos that have 'most replayed' activated", font=("Arial", 12), fg="tan1")
 label.pack(pady=5)
 
 label = tk.Label(root, text="Enter the entire YouTube video URL: ", font=("Arial", 12))
