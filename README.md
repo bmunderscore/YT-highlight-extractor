@@ -1,9 +1,13 @@
 # YT-highlight-extractor
 
 ## Install dependencies
+
 Python 3.X:
+
 pip3 install -r requirements.txt
+
 or
+
 python3 -m pip install -r requirements.txt
 
 ## Usage:
