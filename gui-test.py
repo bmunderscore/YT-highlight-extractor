@@ -10,8 +10,6 @@ from moviepy.editor import *
 import speech_recognition as sr
 import tkinter as tk
 
-# (Your imports remain unchanged)
-# ...
 # Uses the CMU Sphinx toolkit for speech recognition 
 def transcribe_audio_sphinx(output_audio_path):
     recognizer = sr.Recognizer()
@@ -62,15 +60,15 @@ def get_most_replayed_section(youtube_id, max_retries=3):
     print("The video doesn't have sufficient 'mostReplayed' data. This could be due to insufficient views or it being a new video.")
     return None, None
 
-def download_video_section(youtube_id, start_time, end_time, output_mp4, max_retries=5):
+def download_video_section(youtube_id, folder_name, start_time, end_time, output_mp4, max_retries=5):
     retries = 0
     while retries < max_retries:
         try:
             print("Downloading video, please wait...")
             yt = YouTube(f"https://www.youtube.com/watch?v={youtube_id}")
             stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-            download_path = stream.download(filename=f"{youtube_id}/full_video.mp4")
-            ffmpeg_extract_subclip(download_path, start_time, end_time, targetname=f"{youtube_id}/{output_mp4}")
+            download_path = stream.download(filename=f"{folder_name}/full_video.mp4")
+            ffmpeg_extract_subclip(download_path, start_time, end_time, targetname=f"{folder_name}/{output_mp4}")
             #os.remove("temp_video")
             return
         except IncompleteRead:
@@ -80,33 +78,34 @@ def download_video_section(youtube_id, start_time, end_time, output_mp4, max_ret
 
     print("Failed to download after multiple attempts.")
 
-def extract_audio_from_video(youtube_id, output_mp4, output_audio_path):
-    clip = VideoFileClip(youtube_id + "/" + output_mp4)
+def extract_audio_from_video(folder_name, output_mp4, output_audio_path):
+    clip = VideoFileClip(folder_name + "/" + output_mp4)
     clip.audio.write_audiofile(output_audio_path, codec='pcm_s16le')
 
     #video_path = output_mp4
-    output_audio_path = f"{youtube_id}/temp_audio.wav"
+    output_audio_path = f"{folder_name}/temp_audio.wav"
 
-def check_dir(directory_name):
-    if not os.path.exists(directory_name):
-        os.makedirs(directory_name)
+def check_dir(folder_name):
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
 
-def zip_directory(directory_path, output_filename):
-    shutil.make_archive(output_filename, 'zip', directory_path)
+def zip_directory(folder_name, output_filename):
+    shutil.make_archive(output_filename, 'zip', folder_name)
 
 # Function to handle button click event
 def submit_url():
     youtube_url = url_entry.get()
     output_mp4 = name_entry.get()
+    folder_name = folder_entry.get()
     print("Entered URL:", youtube_url)
 
     # Proceed with the main functionality
-    process_video(youtube_url, output_mp4)
+    process_video(youtube_url, folder_name, output_mp4)
 
     # display the entered URL
     url_label.config(text="Processed URL: " + youtube_url)
 
-def process_video(youtube_url, output_mp4):
+def process_video(youtube_url, folder_name, output_mp4):
     # (This is essentially the main functionality you provided earlier but now within a function)
 
     youtube_id = extract_youtube_id(youtube_url)
@@ -116,7 +115,7 @@ def process_video(youtube_url, output_mp4):
         return
     print(f"YouTube ID: " + youtube_id)
 
-    check_dir(youtube_id)
+    check_dir(folder_name)
     
     start_time, end_time = get_most_replayed_section(youtube_id)
 
@@ -125,9 +124,9 @@ def process_video(youtube_url, output_mp4):
         return
 
     try:
-        output_audio_path = f"{youtube_id}/highlight_audio.wav"
-        download_video_section(youtube_id, start_time, end_time, output_mp4)
-        extract_audio_from_video(youtube_id, output_mp4, output_audio_path)
+        output_audio_path = f"{folder_name}/highlight_audio.wav"
+        download_video_section(youtube_id, folder_name, start_time, end_time, output_mp4)
+        extract_audio_from_video(folder_name, output_mp4, output_audio_path)
 
         transcription = transcribe_audio_sphinx(output_audio_path)
         if transcription is None:
@@ -135,14 +134,14 @@ def process_video(youtube_url, output_mp4):
             return
 
         # Write the transcription to a text file
-        with open(f"{youtube_id}/{youtube_id}-highlight-transcription.txt", "w") as f:
+        with open(f"{folder_name}/{youtube_id}-highlight-transcription.txt", "w") as f:
             f.write(transcription + "\r\n")
-            print(f"Transcription saved to "+ youtube_id + "/" + youtube_id + "-highlight-transcription.txt")
+            print(f"Transcription saved to "+ folder_name + "/" + youtube_id + "-highlight-transcription.txt")
 
         zip_choice = input("Do you want to zip the folder? (y/n): ").lower()
         if zip_choice == 'y':
-            zip_directory(youtube_id, youtube_id)
-            print(f"Directory {youtube_id} zipped as {youtube_id}.zip")
+            zip_directory(folder_name, folder_name)
+            print(f"Directory {folder_name} zipped as {folder_name}.zip")
 
     except ValueError as e:
         if str(e) == "API response does not contain 'items'":
@@ -156,21 +155,26 @@ root = tk.Tk()
 root.title("URL Entry App")
 root.minsize(width=250, height=400)
 
-label = tk.Label(root, text="Extract the most popular part of a Youtube Video", font=("Arial", 16))
+label = tk.Label(root, text="YouTube Highlight Extractor v1", font=("Arial", 16))
 label.pack(pady=20)
 
-label = tk.Label(root, text="Warning: This applies only to videos that have 'most replayed' activated", font=("Arial", 10), fg="red")
+label = tk.Label(root, text="Warning: This applies only to videos that have 'most replayed' activated", font=("Arial", 12), fg="red")
 label.pack(pady=5)
 
-label = tk.Label(root, text="Enter the entire YouTube video URL: ", font=("Arial", 10))
+label = tk.Label(root, text="Enter the entire YouTube video URL: ", font=("Arial", 12))
 label.pack(pady=10)
 url_entry = tk.Entry(root, width=70)
 url_entry.pack(pady=10)
 
-label = tk.Label(root, text="Enter the desired name for the new video: ", font=("Arial", 10))
+label = tk.Label(root, text="Enter the desired name for the new video: ", font=("Arial", 12))
 label.pack(pady=10)
 name_entry = tk.Entry(root, width=70)  # Changed variable name to avoid reuse
 name_entry.pack(pady=10)
+
+label = tk.Label(root, text="Enter the desired name for output folder: ", font=("Arial", 12))
+label.pack(pady=10)
+folder_entry = tk.Entry(root, width=70)  # Changed variable name to avoid reuse
+folder_entry.pack(pady=10)
 
 submit_button = tk.Button(root, text="Submit", command=submit_url)
 submit_button.pack(pady=20)
@@ -182,4 +186,3 @@ url_label = tk.Label(root, text="", font=("Arial", 12))
 url_label.pack(pady=20)
 
 root.mainloop()
-
