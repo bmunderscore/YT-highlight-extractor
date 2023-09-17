@@ -8,6 +8,7 @@ python3 -m pip install -r requirements.txt
 
 ## Usage:
 `$ python3 yt-highlight-extractor.py`
+
 `Enter the entire YouTube video URL: https://www.youtube.com/watch?v=oD2OrBjqVtY`
 `Enter the desired output filename (e.g. highlight_clip.mp4): highlight_clip.mp4`
 `YouTube ID: oD2OrBjqVtY`
