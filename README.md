@@ -17,26 +17,17 @@ python3 -m pip install -r requirements.txt
 
 `Enter the desired output filename (e.g. highlight_clip.mp4): highlight_clip.mp4`
 
-`YouTube ID: oD2OrBjqVtY`
-
-`Fetching the significant moment of the video...`
-
-`Fetching the significant moment of the video...`
-
-`Downloading video, please wait...`
-
-`Moviepy - Running:`
-
-`>>> "+ " ".join(cmd)`
-
-`Moviepy - Command successful`
-
-`MoviePy - Writing audio in oD2OrBjqVtY/highlight_audio.wav`
-
-`MoviePy - Done.`
-
-`Transcription saved to oD2OrBjqVtY/oD2OrBjqVtY-highlight-transcription.txt`
-
-`Do you want to zip the folder? (y/n): y`
-
-`Directory oD2OrBjqVtY zipped as oD2OrBjqVtY.zip`
+```
+YouTube ID: oD2OrBjqVtY
+Fetching the significant moment of the video...
+Fetching the significant moment of the video...
+Downloading video, please wait...
+Moviepy - Running:
+>>> "+ " ".join(cmd)
+Moviepy - Command successful
+MoviePy - Writing audio in oD2OrBjqVtY/highlight_audio.wav
+MoviePy - Done.
+Transcription saved to oD2OrBjqVtY/oD2OrBjqVtY-highlight-transcription.txt
+Do you want to zip the folder? (y/n): y
+Directory oD2OrBjqVtY zipped as oD2OrBjqVtY.zip
+```
