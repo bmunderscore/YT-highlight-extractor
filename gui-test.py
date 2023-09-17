@@ -49,8 +49,8 @@ def get_most_replayed_section(youtube_id, max_retries=3):
                 start_time_ms = most_replayed['heatMarkerRenderer']['timeRangeStartMillis']
                 end_time_ms = start_time_ms + most_replayed['heatMarkerRenderer']['markerDurationMillis']
 
-                # Converts 
-                return start_time_ms / 1000, end_time_ms / 1000  # Convert to seconds
+                # Converts to seconds
+                return start_time_ms / 1000, end_time_ms / 1000 
 
         except:
             retries += 1
@@ -60,6 +60,7 @@ def get_most_replayed_section(youtube_id, max_retries=3):
     print("The video doesn't have sufficient 'mostReplayed' data. This could be due to insufficient views or it being a new video.")
     return None, None
 
+# Downloads the video in MP4 format
 def download_video_section(youtube_id, folder_name, start_time, end_time, output_mp4, max_retries=5):
     retries = 0
     while retries < max_retries:
@@ -78,6 +79,7 @@ def download_video_section(youtube_id, folder_name, start_time, end_time, output
 
     print("Failed to download after multiple attempts.")
 
+# Extracts the audio file from the highlight
 def extract_audio_from_video(folder_name, output_mp4, output_audio_path):
     clip = VideoFileClip(folder_name + "/" + output_mp4)
     clip.audio.write_audiofile(output_audio_path, codec='pcm_s16le')
@@ -106,7 +108,6 @@ def submit_url():
     url_label.config(text="Processed URL: " + youtube_url)
 
 def process_video(youtube_url, folder_name, output_mp4):
-    # (This is essentially the main functionality you provided earlier but now within a function)
 
     youtube_id = extract_youtube_id(youtube_url)
 
@@ -149,8 +150,7 @@ def process_video(youtube_url, folder_name, output_mp4):
         else:
             print(e)
 
-# Your GUI script integrated here:
-
+# Tkinter GUI
 root = tk.Tk()
 root.title("YT-Highlight-Extractor")
 root.minsize(width=250, height=400)
