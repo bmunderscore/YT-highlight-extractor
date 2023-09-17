@@ -11,7 +11,7 @@ or
 python3 -m pip install -r requirements.txt
 
 ## Usage:
-`$ python3 yt-highlight-extractor.py`
+`$ python3 yt-highlight-extractor-cli.py`
 
 `Enter the entire YouTube video URL: https://www.youtube.com/watch?v=oD2OrBjqVtY`
 
