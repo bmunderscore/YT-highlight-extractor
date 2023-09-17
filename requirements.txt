@@ -2,6 +2,6 @@ requests
 pocketsphinx
 pytube
 moviepy
-speech_recognition
+SpeechRecognition
 shutil
 re
