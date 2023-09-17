@@ -152,13 +152,13 @@ def process_video(youtube_url, folder_name, output_mp4):
 # Your GUI script integrated here:
 
 root = tk.Tk()
-root.title("URL Entry App")
+root.title("YT-Highlight-Extractor")
 root.minsize(width=250, height=400)
 
 label = tk.Label(root, text="YouTube Highlight Extractor v1", font=("Arial", 16))
 label.pack(pady=20)
 
-label = tk.Label(root, text="Warning: This applies only to videos that have 'most replayed' activated", font=("Arial", 12), fg="red")
+label = tk.Label(root, text="Warning: This applies only to videos that have 'most replayed' activated", font=("Arial", 12), fg="blue")
 label.pack(pady=5)
 
 label = tk.Label(root, text="Enter the entire YouTube video URL: ", font=("Arial", 12))
