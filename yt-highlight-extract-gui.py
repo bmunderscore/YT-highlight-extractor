@@ -138,11 +138,6 @@ def process_video(youtube_url, folder_name, output_mp4):
             f.write(transcription + "\r\n")
             print(f"Transcription saved to "+ folder_name + "/" + youtube_id + "-highlight-transcription.txt")
 
-        zip_choice = input("Do you want to zip the folder? (y/n): ").lower()
-        if zip_choice == 'y':
-            zip_directory(folder_name, folder_name)
-            print(f"Directory {folder_name} zipped as {folder_name}.zip")
-
     except ValueError as e:
         if str(e) == "API response does not contain 'items'":
             print("The video might not be available or indexed by the API, or the YouTube ID extracted is invalid.")
@@ -184,5 +179,14 @@ output_mp4 = ""
 
 url_label = tk.Label(root, text="", font=("Arial", 12))
 url_label.pack(pady=20)
+
+create_zip_var = tk.BooleanVar()
+zip_checkbox = tk.Checkbutton(root, text="Create zip archive?", variable=create_zip_var, font=("Arial", 14), padx=3, pady=3)
+zip_checkbox.pack(pady=10)
+
+if create_zip_var.get():
+    zip_directory(folder_name, folder_name)
+    update_output(f"Directory {folder_name} zipped as {folder_name}.zip")
+
 
 root.mainloop()
