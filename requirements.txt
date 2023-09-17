@@ -3,4 +3,5 @@ pocketsphinx
 pytube
 moviepy
 speech_recognition
+shutil
 re
