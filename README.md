@@ -1,4 +1,5 @@
 # YT-highlight-extractor
+My team's submission for Shellhacks 2023
 
 ## Install dependencies
 
