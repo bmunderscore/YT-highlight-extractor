@@ -4,5 +4,5 @@ pytube
 moviepy
 SpeechRecognition
 #shutil
-tk
-re
+#tk
+#re
